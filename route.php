@@ -8,7 +8,7 @@
  */
 function call($controller, $action) {
     $controller=ucfirst(strtolower($controller) );
-    require_once('controllers/' . $controller . 'Controller.php');
+    require_once('controller/' . $controller . 'Controller.php');
     $controllerClasssName=$controller."Controller";
     $instance=new $controllerClasssName;
     if(!method_exists($instance,$action)){

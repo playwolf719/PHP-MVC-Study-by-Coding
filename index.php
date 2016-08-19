@@ -15,5 +15,5 @@ if (isset($_GET['controller']) && isset($_GET['action'])) {
 /**
  * 引入路由
  */
-require_once('routes.php');
+require_once('route.php');
 ?>

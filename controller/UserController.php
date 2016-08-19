@@ -1,5 +1,6 @@
 <?php
 require_once("base/Controller.php");
+require_once("common/MyHelper.php");
 /**
  * UserController
  */
@@ -7,9 +8,7 @@ class UserController extends Controller{
     public $layout=false;
 
     public function index() {
-      	// we store all the posts in a variable
       	$this->layout=false;
-        // echo json_encode(array("test"));
         return "views/user/user.php";
     }
 
@@ -18,7 +17,14 @@ class UserController extends Controller{
      * @return [type] [description]
      */
     public function register() {
-    
+        $param=array(
+            "email","username","password"
+        );
+        if(MyHelper::arrKeyExistInArr($_POST,$param ) && MyHelper::validateRequire($_POST,$param)){
+            MyHelper::retInJson("","注册成功",0);
+        }else{
+            MyHelper::retInJson("","缺少参数",400);
+        }
     }
 }
 ?>

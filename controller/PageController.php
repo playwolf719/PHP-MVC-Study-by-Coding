@@ -5,8 +5,8 @@ class PageController extends Controller{
     public $layout=false;
 
     public function home() {
-        $first_name = 'Jon';
-        $last_name  = 'Snow';
+        $first_name = 'Deng';
+        $last_name  = 'Benjamin';
         require_once('views/pages/home.php');
     }
 
