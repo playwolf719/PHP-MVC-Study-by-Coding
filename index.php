@@ -1,13 +1,19 @@
 <?php
-  require_once('connection.php');
+/**
+ * 引入数据库
+ */
+require_once('connection.php');
 
-  if (isset($_GET['controller']) && isset($_GET['action'])) {
+if (isset($_GET['controller']) && isset($_GET['action'])) {
     $controller = $_GET['controller'];
     $action     = $_GET['action'];
-  } else {
+} else {
     $controller = 'page';
     $action     = 'home';
-  }
+}
 
-	require_once('routes.php');
+/**
+ * 引入路由
+ */
+require_once('routes.php');
 ?>

@@ -1,14 +1,18 @@
 <?php
-/*
-call path:index.php->layout.php->routes.php
-*/
+/**
+ * 调用controller中的action方法
+ * [call description]
+ * @param  [type] $controller [description]
+ * @param  [type] $action     [description]
+ * @return [type]             [description]
+ */
 function call($controller, $action) {
     $controller=ucfirst(strtolower($controller) );
     require_once('controllers/' . $controller . 'Controller.php');
     $controllerClasssName=$controller."Controller";
     $instance=new $controllerClasssName;
     if(!method_exists($instance,$action)){
-        call('pages', 'error');
+        call('Page', 'error');
     }
     $output=$instance->{ $action }();
     if($instance->layout){
@@ -20,8 +24,8 @@ function call($controller, $action) {
     }
 }
 
-// we're adding an entry for the new controller and its actions
-$controller_file_array=scandir("controllers");
+//扫描controller文件夹中素有controller文件
+$controller_file_array=scandir("controller");
 if($controller){
     $controller=ucfirst(strtolower($controller) );
     if(in_array($controller."Controller.php",$controller_file_array) ){
