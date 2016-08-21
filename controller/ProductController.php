@@ -10,7 +10,7 @@ class ProductController extends Controller
 
     public function beforeAction($action){
         $loginArray=array(
-            "buy","addtocart","removefromcart","removecart"
+            "buy","addtocart","removefromcart","removecart","getcart"
         );
         if(!isset($_SESSION)){
             session_start();
@@ -55,7 +55,7 @@ class ProductController extends Controller
             }else{
                 $cart=json_decode($_SESSION["cart"],true);
                 if(array_key_exists("productiId_".$obj["id"], $cart) ){
-                    $cart["productiId_".$obj["id"]]["obj"]+=1;
+                    $cart["productiId_".$obj["id"]]["number"]+=1;
                 }else{
                     $cart["productiId_".$obj["id"]]=$obj;
                     $cart["productiId_".$obj["id"]]["number"]=1;
@@ -148,6 +148,23 @@ class ProductController extends Controller
             }
             $order->create();
             MyHelper::retInJson($orderInfo);
+        }catch (\Exception $e){
+            MyHelper::retInJson("",$e->getMessage(),$e->getCode());
+        }
+    }
+
+    /**
+     * 交易完成回调页面
+     * @return [type] [description]
+     */
+    public function deal(){
+        try{
+            $payment=PayPalCommon::chkDeal();
+            $order=Order::findByPaymentId($payment->id);
+            $orderTemp=new Order();
+            $orderTemp->id=$order["id"];
+            $orderTemp->updateStatus(Order::SERVING);
+            MyHelper::retInJson("","支付成功！");
         }catch (\Exception $e){
             MyHelper::retInJson("",$e->getMessage(),$e->getCode());
         }

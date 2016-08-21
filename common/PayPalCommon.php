@@ -116,8 +116,8 @@ Class PayPalCommon{
 
         //redirectUrls
         $redirectUrls = new RedirectUrls();
-        $redirectUrls->setReturnUrl(SITE."?controller=order&action=deal&success=true")
-            ->setCancelUrl(SITE."?controller=order&action=deal&success=false");
+        $redirectUrls->setReturnUrl(SITE."?controller=product&action=deal&success=true")
+            ->setCancelUrl(SITE."?controller=product&action=deal&success=false");
 
         //payment
         $payment = new Payment();
@@ -150,7 +150,7 @@ Class PayPalCommon{
         }
         $approvalUrl = $payment->getApprovalLink();
         $order["orderNum"]=$payment->id;
-        $order["cart"]=$params["cart"];
+        $order["cart"]=json_encode($params["cart"] );
         $order["payUrl"]=$approvalUrl;
         $order["shipping"]=floatval($params["shipping"]);
         $order["cost"]=$cost;
@@ -162,32 +162,19 @@ Class PayPalCommon{
 
     public static function chkDeal(){
         if (isset($_GET['success']) && $_GET['success'] == 'true') {
-            // $paymentId = $_GET['paymentId'];
-            // $apiContext=self::getApiContext();
-            // $payment = Payment::get($paymentId, $apiContext);
+            $paymentId = $_GET['paymentId'];
+            $apiContext=self::getApiContext();
+            $payment = Payment::get($paymentId, $apiContext);
 
-            // $execution = new PaymentExecution();
-            // $execution->setPayerId($_GET['PayerID']);
+            $execution = new PaymentExecution();
+            $execution->setPayerId($_GET['PayerID']);
 
-            // $result = $payment->execute($execution, $apiContext);
+            $result = $payment->execute($execution, $apiContext);
 
-            // $payment = Payment::get($paymentId, $apiContext);
-
-            // $order=Order::find()->where(["DPaymentId"=>$payment->id])->one();
-            // if(floatval($order->DTotalPrice)!=floatval($payment->transactions[0]->amount->total) ){
-            //     throw new \Exception("付款金额不符！",400);
-            // }
-
-            // //订单支付成功信息推送
-            // $paramMsg=array(
-            //     "type"=>"orderPayOk",
-            //     "openid"=>$order->creator->DOpenId,
-            //     "orderProductName"=>$order->DName,
-            //     "orderMoneySum"=>$order->DTotalPrice,
-            //     "url"=>"http://www.baidu.com",
-            // );
-            // WxCommon::pushTmplMsg($paramMsg);
-            // return $payment;
+            $payment = Payment::get($paymentId, $apiContext);
+            return $payment;
+        } else if($_GET['success']=="false"){
+            throw new \Exception("付款失败！",400);
         } else {
             throw new \Exception("非正常渠道访问该地址！",400);
         }

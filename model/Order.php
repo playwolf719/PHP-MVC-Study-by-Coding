@@ -18,12 +18,12 @@ class Order extends Model
      * @return [type]
      */
     public static function tableName(){
-        return "order";
+        return "theorder";
     }
 
     public static function propName(){
         return array(
-            "id","orderNum","cart","payUrl","cost","status","shipping","time"
+            "id","orderNum","cart","payUrl","cost","status","shipping","totalCost","time","userId"
         );
     }
 
@@ -78,6 +78,32 @@ class Order extends Model
         return $temp;
     }
 
+
+
+    /**
+     * 获取该paymentId对应的结果
+     * @return [type]
+     */
+    public static function findByPaymentId($paymentId) {
+        $db = Db::getInstance();
+        // we make sure $id is an integer
+        $tableName=self::tableName();
+        $req = $db->prepare("SELECT * FROM $tableName WHERE orderNum = :orderNum");
+        // the query was prepared, now we replace :id with our actual $id value
+        $req->execute(array('orderNum' => $paymentId));
+        $obj=$req->fetch();
+        if(!$obj){
+            throw new Exception("未发现", 400);
+        }
+        foreach (self::propName() as $key => $value) {
+            if(!array_key_exists($value, $obj) ){
+                throw new Exception("属性不存在", 500);
+            }
+            $temp[$value]=$obj[$value];
+        }
+        return $temp;
+    }
+
     
     /**
      * 创建新对象
@@ -86,8 +112,27 @@ class Order extends Model
     public function create(){
         $db = Db::getInstance();
         $tableName=self::tableName();
-        $req = $db->prepare("insert into {$tableName} (orderNum,cart,payUrl,cost,status,shipping,time,totalCost) values (:orderNum,:cart,:payUrl,:cost,:status,:shipping,now(),:totalCost)");
-        $req=$req->execute(array('orderNum' => $this->orderNum,"cart"=>$this->cart,"payUrl"=>$this->payUrl,"cost"=>$this->cost,"status"=>$this->status,"shipping"=>$this->shipping,"totalCost"=>$this->totalCost,"userId"=>$this->userId) );
+        $req = $db->prepare("insert into {$tableName} (orderNum,payUrl,cart,cost,status,shipping,time,totalCost,userId) values (:orderNum,:payUrl,:cart,:cost,:status,:shipping,now(),:totalCost,:userId )");
+        // var_dump($this);
+        // die();
+        $req=$req->execute(array('orderNum' => $this->orderNum,"payUrl"=>$this->payUrl,"cart"=>$this->cart,"cost"=>$this->cost,"status"=>$this->status,"shipping"=>$this->shipping,"totalCost"=>$this->totalCost,"userId"=>$this->userId ) );
+        if(!$req){
+            throw new Exception("操作失败", 500);
+        }
+    }
+
+    /**
+     * 更新已有对象
+     * @return [type]
+     */
+    public function updateStatus($status){
+        $db = Db::getInstance();
+        if(empty($status) ){
+            throw new Exception("状态值不能为空", 400);
+        }
+        $tableName=self::tableName();
+        $req = $db->prepare("UPDATE {$tableName} SET status=:status where id=:id");
+        $req= $req->execute(array('status' => $status,"id"=>$this->id));
         if(!$req){
             throw new Exception("操作失败", 500);
         }
