@@ -1,0 +1,12 @@
+{
+    "name": "PHP-MVC-Study-by-Coding",
+    "authors": [
+        {
+            "name": "playwolf719",
+            "email": "playwolf719@163.com"
+        }
+    ],
+    "require": {
+        "paypal/rest-api-sdk-php": "*"
+    }
+}

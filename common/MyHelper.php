@@ -26,9 +26,6 @@ class MyHelper
      * @return [type]        [description]
      */
     public static function retInJson($data="",$msg="操作成功！",$code=0){
-        if(empty($data)){
-            $data="";
-        }
         if(empty($msg)){
             $msg="操作成功！";
         }
@@ -36,6 +33,9 @@ class MyHelper
         return ;
     }
 
+    /**
+     * 
+     */
     public static function validateRequire($data,$requireFieldArray){
     	foreach ($requireFieldArray as $key => $value) {
     		if(!array_key_exists($value, $data)){

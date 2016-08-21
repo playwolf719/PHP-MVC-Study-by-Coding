@@ -1,17 +1,19 @@
 <?php
-require_once("base/Controller.php");
+/**
+ * PageController
+ */
 class PageController extends Controller{
     
-    public $layout=false;
+    // public $layout=false;
 
     public function home() {
         $first_name = 'Deng';
         $last_name  = 'Benjamin';
-        require_once('views/pages/home.php');
+        $this->render('page/home',array('first_name' =>$first_name, "last_name"=>$last_name) );
     }
 
     public function error() {
-        require_once('views/pages/error.php');
+        $this->render( 'page/error');
     }
 }
 ?>

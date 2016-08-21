@@ -1,4 +1,24 @@
 <?php
+require_once("common/MyHelper.php");
+/**
+ * 获取路由
+ */
+if (isset($_GET['controller']) && isset($_GET['action'])) {
+    $controller = $_GET['controller'];
+    $action     = $_GET['action'];
+} else {
+    $controller = 'page';
+    $action     = 'home';
+}
+/**
+ * 根据路由进行渲染
+ */
+if($controller){
+    call($controller, $action);
+}else{
+    call('Page', 'home');
+}
+
 /**
  * 调用controller中的action方法
  * [call description]
@@ -7,33 +27,26 @@
  * @return [type]             [description]
  */
 function call($controller, $action) {
-    $controller=ucfirst(strtolower($controller) );
-    require_once('controller/' . $controller . 'Controller.php');
-    $controllerClasssName=$controller."Controller";
-    $instance=new $controllerClasssName;
-    if(!method_exists($instance,$action)){
-        call('Page', 'error');
+    try {
+        //扫描controller文件夹中的所有controller文件
+        $controller=ucfirst(strtolower($controller) );
+        $action=strtolower($action);
+        $filepath=dirname(__FILE__)."/controller/".$controller."Controller.php";
+        if(!file_exists($filepath)){
+            call('Page', 'error');
+        }
+        require_once('controller/' . $controller . 'Controller.php');
+        $controllerClasssName=$controller."Controller";
+        $instance=new $controllerClasssName;
+        if(!method_exists($instance,$action) ){
+            call('Page', 'error');
+        }else{
+            //触发beforeAction事件
+            $instance->beforeAction($action);
+            $instance->{$action}();
+        }
+    } catch (Exception $e) {
+        MyHelper::retInJson("",$e->getMessage(),$e->getCode());
     }
-    $output=$instance->{ $action }();
-    if($instance->layout){
-        include_once("views/layout/header.php");
-    }
-    include_once($output);
-    if($instance->layout){
-        include_once("views/layout/footer.php");
-    }
-}
-
-//扫描controller文件夹中素有controller文件
-$controller_file_array=scandir("controller");
-if($controller){
-    $controller=ucfirst(strtolower($controller) );
-    if(in_array($controller."Controller.php",$controller_file_array) ){
-        call($controller, $action);
-    }else{
-        call('Page', 'error');
-    }
-}else{
-    call('Page', 'home');
 }
 ?>

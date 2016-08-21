@@ -1,16 +1,19 @@
 <?php
+
+define('SITE_PATH',realpath(dirname(__FILE__)).'/');
+define('SITE','http://182.92.6.59/dcb/mvc/index.php');
+/**
+ * 引入基类
+ */
+require_once("base/Controller.php");
+require_once("base/Model.php");
+
 /**
  * 引入数据库
  */
 require_once('connection.php');
 
-if (isset($_GET['controller']) && isset($_GET['action'])) {
-    $controller = $_GET['controller'];
-    $action     = $_GET['action'];
-} else {
-    $controller = 'page';
-    $action     = 'home';
-}
+require __DIR__  . '/vendor/autoload.php';
 
 /**
  * 引入路由
