@@ -4,6 +4,6 @@ The View part is not that important in my mvc, cause MC+JSON is more popular now
 
 ## feature
 - very very very simple mvc for you to learn
-- Simulate the shopping procedure. So we have user register, login, product, order and buy through PayPal.
+- Simulate the shopping procedure. So we have user register, login, product part, order part and you can buy sth by PayPal with my test account.
 - JSON
 - PayPal
