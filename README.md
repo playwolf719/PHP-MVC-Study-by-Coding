@@ -1,5 +1,5 @@
 # PHP-MVC-Study-by-Coding
-Learn how to build a very very very simple MVC by coding it to be simple website.
+Learn how to build a very very very simple MVC by coding it to be a simple website.
 The View part is not that important in my mvc, cause MC+JSON is more popular nowdays.
 
 ## feature
