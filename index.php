@@ -5,6 +5,7 @@ define('SITE','http://182.92.6.59/dcb/mvc/index.php');
 /**
  * 引入基类
  */
+require_once("base/View.php");
 require_once("base/Controller.php");
 require_once("base/Model.php");
 
